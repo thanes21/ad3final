@@ -24,7 +24,9 @@ ui <- fluidPage(
     
     #Creates the main panel that displays the data
     mainPanel(
+      h2(textOutput("name")),
       
+      tableOutput("leader")
     )
   )
 )
