@@ -24,7 +24,7 @@ ui <- fluidPage(
     
     #Creates the main panel that displays the data
     mainPanel(
-      verbatimTextOutput("userinput")
+      
     )
   )
 )
