@@ -48,6 +48,39 @@ server <- function(input, output) {
       leaderboards.players <- body$data$players$data$names$international
       leaderboards.players <- as.vector(leaderboards.players)
       
+      #get the raw video link
+      video.uri <- unlist(leaderboards$run.videos.links[1])[1]
+      
+      output$video <- renderUI({
+        #test if the link is directly to the website
+        if(grepl("youtube",video.uri)){
+          #extract the video id
+          video.id <- unlist(strsplit("https://www.youtube.com/watch?v=93Ty2lwuq0Y", "="))[2]
+          #convert the link into embed link and put the iframe into output
+          HTML(paste0('<iframe width="600" height="400" src="//www.youtube.com/embed/', video.id,'" frameborder="0" allowfullscreen></iframe>'))
+        } else if (grepl("twitch", video.uri)){ #check if the link is a twitch video
+          #extract the video id
+          video.id <- unlist(strsplit(video.uri, "/v/"))[2]
+          #convert into api link and play in the iframe output
+          HTML(paste0('<iframe
+                      src="http://player.twitch.tv/?video=', video.id,'&autoplay=false"
+                      height="400"
+                      width="600"
+                      frameborder="0"
+                      scrolling="no"
+                      allowfullscreen="true">
+                      </iframe>'))
+        } else if(grepl("youtu.be",video.uri)){ #check if the link is already a embed link
+          #extract the embed link
+          video.id <- substring(video.uri, 9)
+          #put it into iframe output
+          HTML(paste0('<iframe width="600" height="400" src="//', video.id,'" frameborder="0" allowfullscreen></iframe>'))
+        } else{
+          #displays no video available for unrecognizable or no video links
+          tags$h3("No video available right now")
+        }
+      })
+      
       #Gets the country where each speedrun was accomplished
       leaderboards.countries <- body$data$players$data$location$country$names$international
       leaderboards.countries <- as.vector(leaderboards.countries)
