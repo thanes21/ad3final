@@ -15,6 +15,8 @@ server <- function(input, output) {
     data <- fromJSON(content(games.response, "text"))
     games <- data.frame(data[1]) %>% flatten()
     
+    #renders output if there is data
+    if(nrow(games) > 0) {
     #Selects the first game's ID (most like the users search)
     game.id <- games$data.id[1]
     game.name <- games$data.names.international[1]
@@ -151,6 +153,15 @@ server <- function(input, output) {
       
       return(p)
     })
+    #not show error if data is empty
+    } else {
+      output$name <- renderText("No such game found")
+      output$category <- renderUI(NULL)
+      output$leader <- renderTable(NULL)
+      output$plot <- renderUI(NULL)
+      output$country.plot <- renderUI(NULL)
+      output$video <- renderUI(NULL)
+    }
   })
 }
 

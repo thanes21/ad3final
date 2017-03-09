@@ -6,6 +6,8 @@ library('plotly')
 #Defines a UI with a sidebar layout and multiple tabs for the user to choose
 ui <- fluidPage( theme = "bootstrap.css",
   
+  #changed background color               
+  tags$head(tags$style("body{background-color: #d1c6c0; }")),               
                  
   #Title of the app
   tags$body(titlePanel("Speedrun Search"),
