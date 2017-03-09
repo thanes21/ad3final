@@ -1,6 +1,7 @@
 #Loads the Shiny library
 library('shiny')
-
+library('ggplot2')
+library('plotly')
 
 #Defines a UI with a sidebar layout and multiple tabs for the user to choose
 ui <- fluidPage(
@@ -31,10 +32,19 @@ ui <- fluidPage(
       
       #Name of the game
       h2(textOutput("name")),
-      
-      
+    
+      #Creates the tab format
+      tabsetPanel(
+
       #Leaderboard of the game
-      tableOutput("leader")
+      tabPanel('Table', tableOutput("leader")),
+      
+      #Plot of the runs
+      tabPanel('Plot', plotlyOutput('plot'))
+      
+      )
     )
   )
 )
+
+shinyUI(ui)

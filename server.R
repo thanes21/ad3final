@@ -2,7 +2,8 @@ library('shiny')
 library('httr')
 library('jsonlite')
 library('dplyr')
-
+library('ggplot2')
+library('plotly')
 
 server <- function(input, output) {
   
@@ -31,8 +32,7 @@ server <- function(input, output) {
     output$category <- renderUI({
       selectInput("category", "Categories", categories$data.name)
     })
-    
-    
+
     #Reactive data to change leaderboard based on category chosen
     data <- reactive({
       
@@ -57,5 +57,16 @@ server <- function(input, output) {
     #Renders a data table representation of a leaderboard
     output$leader <- renderTable(data())
     
+    #Creates plot
+    output$plot <- renderPlotly({
+      p <- ggplot(data = data(), mapping = aes(x = Place, y = Time, color = Date)) +
+        geom_point() +
+        labs(x = "Place",
+             y = "Time (seconds)")
+      
+      p <- ggplotly(p)
+      
+      return(p)
+    })
   })
 }
