@@ -48,6 +48,30 @@ server <- function(input, output) {
       leaderboards.players <- body$data$players$data$names$international
       leaderboards.players <- as.data.frame(leaderboards.players)  
       
+      video.uri <- unlist(leaderboards$run.videos.links[1])[1]
+      
+      output$video <- renderUI({
+        if(grepl("youtube",video.uri)){
+          video.id <- unlist(strsplit("https://www.youtube.com/watch?v=93Ty2lwuq0Y", "="))[2]
+          HTML(paste0('<iframe width="600" height="400" src="//www.youtube.com/embed/', video.id,'" frameborder="0" allowfullscreen></iframe>'))
+        } else if (grepl("twitch", video.uri)){
+          video.id <- unlist(strsplit(video.uri, "/v/"))[2]
+          HTML(paste0('<iframe
+                      src="http://player.twitch.tv/?video=', video.id,'&autoplay=false"
+                      height="400"
+                      width="600"
+                      frameborder="0"
+                      scrolling="no"
+                      allowfullscreen="true">
+                      </iframe>'))
+        } else if(grepl("youtu.be",video.uri)){
+          video.id <- substring(video.uri, 9)
+          HTML(paste0('<iframe width="600" height="400" src="//', video.id,'" frameborder="0" allowfullscreen></iframe>'))
+        } else{
+          tags$h3("No video available right now")
+        }
+      })
+      
       #Creates a data frame representing a leaderboard based on the given category
       display.leaderboard <- select(leaderboards, place)
       display.leaderboard$names <- leaderboards.players
