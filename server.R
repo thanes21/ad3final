@@ -2,7 +2,8 @@ library('shiny')
 library('httr')
 library('jsonlite')
 library('dplyr')
-
+library('ggplot2')
+library('plotly')
 
 server <- function(input, output) {
   
@@ -39,10 +40,23 @@ server <- function(input, output) {
     leaderboards <- body$data$runs
     leaderboards <- as.data.frame(leaderboards) %>% flatten()
     
-    
     #Renders a data table representation of a leaderboard
     display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
     colnames(display.leaderboard) <- c("Place", "Time", "Date")
     output$leader <- renderTable(display.leaderboard)
+    
+    # Trying plot stuff
+    output$plot <- renderPlotly({
+      p <- ggplot(data = display.leaderboard, mapping = aes(x = Place, y = Time, color = Date)) +
+        geom_point() +
+        labs(x = "Place",
+             y = "Time (seconds)")
+      
+      p <- ggplotly(p)
+      
+      return(p)
+    })
   })
 }
+
+shinyServer(server)
