@@ -14,14 +14,11 @@ ui <- fluidPage(
     #Creates the widgets that the user can use to change the data
     sidebarPanel(
       
-      
       #Users input to search for game
       textInput("game", "Game", value = ""),
       
-      
       #Button pressed for user to search
       actionButton(inputId = "search", "Search"),
-      
       
       #Drop down menu for user to select a category in the searched game
       uiOutput("category")
