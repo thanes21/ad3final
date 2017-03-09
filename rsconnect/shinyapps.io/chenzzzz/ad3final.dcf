@@ -3,9 +3,9 @@ title: ad3final
 account: chenzzzz
 server: shinyapps.io
 appId: 162291
-bundleId: 740527
+bundleId: 740637
 url: https://chenzzzz.shinyapps.io/ad3final/
-when: 1489084375.07688
+when: 1489089409.67413
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .RData|README.md
