@@ -46,14 +46,19 @@ server <- function(input, output) {
       leaderboards.players.response <- GET(paste0("http://www.speedrun.com/api/v1/leaderboards/", game.id, "/category/", filtered$data.id, "?embed=players"))
       body <- fromJSON(content(leaderboards.players.response, "text"))
       leaderboards.players <- body$data$players$data$names$international
-      leaderboards.players <- as.data.frame(leaderboards.players)  
+      leaderboards.players <- as.vector(leaderboards.players)
+      
+      #Gets the country where each speedrun was accomplished
+      leaderboards.countries <- body$data$players$data$location$country$names$international
+      leaderboards.countries <- as.vector(leaderboards.countries)
       
       #Creates a data frame representing a leaderboard based on the given category
       display.leaderboard <- select(leaderboards, place)
+      display.leaderboard$country <- leaderboards.countries
       display.leaderboard$names <- leaderboards.players
       display.leaderboard$run.times.realtime_t <- leaderboards$run.times.realtime_t
       display.leaderboard$run.date <- leaderboards$run.date
-      colnames(display.leaderboard) <- c("Place", "Player", "Time", "Date")
+      colnames(display.leaderboard) <- c("Place", "Country", "Player", "Time", "Date")
       
       return(display.leaderboard)
     })
@@ -67,6 +72,21 @@ server <- function(input, output) {
         geom_point() +
         labs(x = "Place",
              y = "Time (seconds)")
+      
+      p <- ggplotly(p)
+      
+      return(p)
+    })
+    
+    #Creates plot of number of speedruns in a country
+    output$country.plot <- renderPlotly({
+      p <- ggplot(data = data(), mapping = aes(x = Country, width = 20)) +
+        geom_bar(fill = "purple") +
+        labs(title = "Which Country Had The Most Speed Runs?",
+             x = "Country",
+             y = "Number of speedruns") +
+        theme(axis.text.x = element_text(angle = 45)) +
+        theme(legend.position="none")
       
       p <- ggplotly(p)
       
