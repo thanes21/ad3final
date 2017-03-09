@@ -31,7 +31,7 @@ server <- function(input, output) {
     body <- fromJSON(content(leaderboards.response, "text"))
     leaderboards <- body$data$runs
     leaderboards <- as.data.frame(leaderboards) %>% flatten()
-    
+
     #Creates data frame to display
     display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
 
