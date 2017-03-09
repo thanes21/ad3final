@@ -40,7 +40,7 @@ ui <- fluidPage(
       tabPanel('Table', tableOutput("leader")),
       
       #Plot of the runs
-      tabPanel('Plot', plotlyOutput('plot'))
+      tabPanel('Plot', plotlyOutput('plot'), "This is an interactive plot showing the top runs for your game of choice. Each point represents a run, and its position on the graph indicates the time of the run. Hover over one of the data points to see all the information!")
       
       )
     )
