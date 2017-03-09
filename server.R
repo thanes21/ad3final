@@ -52,21 +52,30 @@ server <- function(input, output) {
       video.uri <- unlist(leaderboards$run.videos.links[1])[1]
       
       output$video <- renderUI({
+        
         #test if the link is directly to the website
         if(grepl("youtube",video.uri)){
           #refresh id
+          
           video.id <- ""
           #extract the video id
+          
           video.id <- unlist(strsplit(video.uri, "="))[2]
+          
           #title of page
           tags$h3("The No.1 rank gameplay")
+          
           #convert the link into embed link and put the iframe into output
           HTML(paste0('<h3>The No.1 rank gameplay</h3><iframe width="600" height="400" src="//www.youtube.com/embed/', video.id,'" frameborder="0" allowfullscreen></iframe>'))
+          
         } else if (grepl("twitch", video.uri)){ #check if the link is a twitch video
+          
           #refresh id
           video.id <- ""
+          
           #extract the video id
           video.id <- unlist(strsplit(video.uri, "/v/"))[2]
+          
           #convert into api link and play in the iframe output
           HTML(paste0('<h3>The No.1 rank gameplay</h3><iframe
                       src="//player.twitch.tv/?video=', "v", video.id,'&autoplay=false"
@@ -76,16 +85,22 @@ server <- function(input, output) {
                       scrolling="no"
                       allowfullscreen="true">
                       </iframe>'))
+          
         } else if(grepl("youtu.be",video.uri)){ #check if the link is already a embed link
+          
           #refresh id
           video.id <- ""
+          
           #extract the embed link
           video.id <- substring(video.uri, 9)
+          
           #title of page
           tags$h3("The No.1 rank gameplay")
+          
           #put it into iframe output
           HTML(paste0('<h3>The No.1 rank gameplay</h3><iframe width="600" height="400" src="//', video.id,'" frameborder="0" allowfullscreen></iframe>'))
         } else{
+          
           #displays no video available for unrecognizable or no video links
           tags$h3("No video available right now")
         }
@@ -102,6 +117,7 @@ server <- function(input, output) {
       display.leaderboard$run.times.realtime_t <- leaderboards$run.times.realtime_t
       display.leaderboard$run.date <- leaderboards$run.date
       colnames(display.leaderboard) <- c("Place", "Country", "Player", "Time", "Date")
+
       
       return(display.leaderboard)
     })

@@ -8,7 +8,9 @@ ui <- fluidPage( theme = "bootstrap.css",
   
                  
   #Title of the app
-  tags$body(titlePanel("Speedrun"),
+  tags$body(titlePanel("Speedrun Search"),
+            
+  p("This application uses Speedrun.com's API to access data regarding speedruns of games. In the sidebar, type a game you wish to view information on then hit search! You can then look at different Speedrun categories for that game. Use the tabs to display different information about the game you searched. Try searching for Super Mario Bros or Super Mario World!"), 
   
   #Creates the sidebar
   sidebarLayout(
@@ -36,7 +38,7 @@ ui <- fluidPage( theme = "bootstrap.css",
       tabsetPanel(
 
         #Leaderboard of the game
-        tabPanel("Table", tableOutput("leader")),
+        tabPanel("Table", "This is a leaderboard showing the top runs for the game of your choice. It shows the runners placement, name, country, run time, and what date they got that time on.", tableOutput("leader")),
         
         #Plot of the runs
         tabPanel("Plot", plotlyOutput("plot"), "This is an interactive plot showing the top runs for your game of choice. Each point represents a run, and its position on the graph indicates the time of the run. Hover over one of the data points to see all the information!"),
