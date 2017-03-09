@@ -4,7 +4,7 @@ library('ggplot2')
 library('plotly')
 
 #Defines a UI with a sidebar layout and multiple tabs for the user to choose
-ui <- fluidPage(
+ui <- fluidPage( theme = "bootstrap.css",
   #Title of the app
   titlePanel("Speedrun"),
   
