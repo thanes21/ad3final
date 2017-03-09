@@ -19,13 +19,21 @@ ui <- fluidPage(
       
       
       #Button pressed for user to search
-      actionButton("search", "Search")
+      actionButton(inputId = "search", "Search"),
+      
+      
+      #Drop down menu for user to select a category in the searched game
+      uiOutput("category")
     ),
     
     #Creates the main panel that displays the data
     mainPanel(
+      
+      #Name of the game
       h2(textOutput("name")),
       
+      
+      #Leaderboard of the game
       tableOutput("leader")
     )
   )

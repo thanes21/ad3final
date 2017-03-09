@@ -18,12 +18,19 @@ server <- function(input, output) {
     #Selects the first game's ID (most like the users search)
     game.id <- games$data.id[1]
     game.name <- games$data.names.international[1]
-    output$name <- renderText(game.name)
+    output$name <- renderText(game.name) #Name of the game being displayed
+    
     
     #Queries API for all categories of the game
     category.response <- GET(paste0("http://www.speedrun.com/api/v1/games/", game.id, "/categories"))
     body <- fromJSON(content(category.response, "text"))
     categories <- data.frame(body[1])
+    
+    
+    #Renders categories of the game in a drop down menu
+    output$category <- renderUI({
+      selectInput("category", "Categories", categories$data.name)
+    })
     
     
     #Queries API again using the games ID to get leaderboards of each category
@@ -32,10 +39,10 @@ server <- function(input, output) {
     leaderboards <- body$data$runs
     leaderboards <- as.data.frame(leaderboards) %>% flatten()
     
-    #Creates data frame to display
-    display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
-
-    output$leader <- renderTable(display.leaderboard)
     
+    #Renders a data table representation of a leaderboard
+    display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
+    colnames(display.leaderboard) <- c("Place", "Time", "Date")
+    output$leader <- renderTable(display.leaderboard)
   })
 }
