@@ -40,7 +40,7 @@ ui <- fluidPage(
         tabPanel("Plot", plotlyOutput("plot"), "This is an interactive plot showing the top runs for your game of choice. Each point represents a run, and its position on the graph indicates the time of the run. Hover over one of the data points to see all the information!"),
       
         #Plot of the countries
-        tabPanel("Country", plotlyOutput("country.plot"), "This is an interactive plot showing the number of speedruns recorded in a certain counry. Hover over one of the bars to see the exact number of speed runs!")
+        tabPanel("Country", plotlyOutput("country.plot"), "This is an interactive plot showing the number of speedruns recorded in a certain country. Hover over one of the bars to see the exact number of speed runs! How well does your country speed run?")
       )
     )
   )
