@@ -15,18 +15,15 @@ server <- function(input, output) {
     data <- fromJSON(content(games.response, "text"))
     games <- data.frame(data[1]) %>% flatten()
     
-    
     #Selects the first game's ID (most like the users search)
     game.id <- games$data.id[1]
     game.name <- games$data.names.international[1]
     output$name <- renderText(game.name) #Name of the game being displayed
     
-    
     #Queries API for all categories of the game
     category.response <- GET(paste0("http://www.speedrun.com/api/v1/games/", game.id, "/categories"))
     body <- fromJSON(content(category.response, "text"))
     categories <- data.frame(body[1])
-    
     
     #Renders categories of the game in a drop down menu
     output$category <- renderUI({
@@ -39,17 +36,24 @@ server <- function(input, output) {
       #Filters all the categories for the chosen category
       filtered <- filter(flatten(categories), data.name == input$category)
       
-      
       #Queries API again using the games ID to get leaderboards of each category
       leaderboards.response <- GET(paste0("http://www.speedrun.com/api/v1/leaderboards/", game.id, "/category/", filtered$data.id))
       body <- fromJSON(content(leaderboards.response, "text"))
       leaderboards <- body$data$runs
       leaderboards <- as.data.frame(leaderboards) %>% flatten()
-  
+
+      #Queries API again using the game ID to get player names
+      leaderboards.players.response <- GET(paste0("http://www.speedrun.com/api/v1/leaderboards/", game.id, "/category/", filtered$data.id, "?embed=players"))
+      body <- fromJSON(content(leaderboards.players.response, "text"))
+      leaderboards.players <- body$data$players$data$names$international
+      leaderboards.players <- as.data.frame(leaderboards.players)  
       
       #Creates a data frame representing a leaderboard based on the given category
-      display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
-      colnames(display.leaderboard) <- c("Place", "Time", "Date")
+      display.leaderboard <- select(leaderboards, place)
+      display.leaderboard$names <- leaderboards.players
+      display.leaderboard$run.times.realtime_t <- leaderboards$run.times.realtime_t
+      display.leaderboard$run.date <- leaderboards$run.date
+      colnames(display.leaderboard) <- c("Place", "Player", "Time", "Date")
       
       return(display.leaderboard)
     })
