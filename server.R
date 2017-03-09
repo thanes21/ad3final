@@ -2,7 +2,6 @@ library('shiny')
 library('httr')
 library('jsonlite')
 library('dplyr')
-library('tidyr')
 
 
 server <- function(input, output) {
@@ -37,13 +36,17 @@ server <- function(input, output) {
     leaderboards <- as.data.frame(leaderboards) %>% flatten()
     
     #Queries API again using the user ID to get usernames
-    test <- as.data.frame(leaderboards$run.players)
-    test
+    leaderboards.players.response <- GET(paste0("http://www.speedrun.com/api/v1/leaderboards/", "pd0wq31e", "/category/", categories$data.id[1], "?embed=players"))
+    body <- fromJSON(content(leaderboards.players.response, "text"))
+    leaderboards.players <- body$data$players$data$names$international
+    leaderboards.players <- as.data.frame(leaderboards.players)
     
     #Creates data frame to display
-    display.leaderboard <- select(leaderboards, place, run.players, run.times.realtime_t, run.date)
-    display.leaderboard <- display.leaderboard %>%
-      mutate(run.players = )
+    # display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
+    display.leaderboard <- select(leaderboards, place)
+    display.leaderboard$names <- leaderboards.players
+    display.leaderboard$run.times.realtime_t <- leaderboards$run.times.realtime_t
+    display.leaderboard$run.date <- leaderboards$run.date
       
 
     output$leader <- renderTable(display.leaderboard)
