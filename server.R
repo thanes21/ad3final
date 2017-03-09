@@ -54,13 +54,17 @@ server <- function(input, output) {
       output$video <- renderUI({
         #test if the link is directly to the website
         if(grepl("youtube",video.uri)){
+          #refresh id
+          video.id <- ""
           #extract the video id
-          video.id <- unlist(strsplit("https://www.youtube.com/watch?v=93Ty2lwuq0Y", "="))[2]
+          video.id <- unlist(strsplit(video.uri, "="))[2]
           #title of page
           tags$h3("The No.1 rank gameplay")
           #convert the link into embed link and put the iframe into output
           HTML(paste0('<h3>The No.1 rank gameplay</h3><iframe width="600" height="400" src="//www.youtube.com/embed/', video.id,'" frameborder="0" allowfullscreen></iframe>'))
         } else if (grepl("twitch", video.uri)){ #check if the link is a twitch video
+          #refresh id
+          video.id <- ""
           #extract the video id
           video.id <- unlist(strsplit(video.uri, "/v/"))[2]
           #convert into api link and play in the iframe output
@@ -73,6 +77,8 @@ server <- function(input, output) {
                       allowfullscreen="true">
                       </iframe>'))
         } else if(grepl("youtu.be",video.uri)){ #check if the link is already a embed link
+          #refresh id
+          video.id <- ""
           #extract the embed link
           video.id <- substring(video.uri, 9)
           #title of page
