@@ -33,16 +33,29 @@ server <- function(input, output) {
     })
     
     
-    #Queries API again using the games ID to get leaderboards of each category
-    leaderboards.response <- GET(paste0("http://www.speedrun.com/api/v1/leaderboards/", game.id, "/category/", categories$data.id[1]))
-    body <- fromJSON(content(leaderboards.response, "text"))
-    leaderboards <- body$data$runs
-    leaderboards <- as.data.frame(leaderboards) %>% flatten()
-    
+    #Reactive data to change leaderboard based on category chosen
+    data <- reactive({
+      
+      #Filters all the categories for the chosen category
+      filtered <- filter(flatten(categories), data.name == input$category)
+      
+      
+      #Queries API again using the games ID to get leaderboards of each category
+      leaderboards.response <- GET(paste0("http://www.speedrun.com/api/v1/leaderboards/", game.id, "/category/", filtered$data.id))
+      body <- fromJSON(content(leaderboards.response, "text"))
+      leaderboards <- body$data$runs
+      leaderboards <- as.data.frame(leaderboards) %>% flatten()
+  
+      
+      #Creates a data frame representing a leaderboard based on the given category
+      display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
+      colnames(display.leaderboard) <- c("Place", "Time", "Date")
+      
+      return(display.leaderboard)
+    })
     
     #Renders a data table representation of a leaderboard
-    display.leaderboard <- select(leaderboards, place, run.times.realtime_t, run.date)
-    colnames(display.leaderboard) <- c("Place", "Time", "Date")
-    output$leader <- renderTable(display.leaderboard)
+    output$leader <- renderTable(data())
+    
   })
 }
