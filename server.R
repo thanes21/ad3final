@@ -69,7 +69,7 @@ server <- function(input, output) {
           video.id <- unlist(strsplit(video.uri, "/v/"))[2]
           #convert into api link and play in the iframe output
           HTML(paste0('<h3>The No.1 rank gameplay</h3><iframe
-                      src="http://player.twitch.tv/?video=', video.id,'&autoplay=false"
+                      src="//player.twitch.tv/?video=', "v", video.id,'&autoplay=false"
                       height="400"
                       width="600"
                       frameborder="0"
